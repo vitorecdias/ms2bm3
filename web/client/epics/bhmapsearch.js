@@ -162,7 +162,7 @@ var layerEnd = {
     'EPSG:900913': true
   },
   catalogURL: null,
-  id: 'ide_bhgeo_geopackage:ENDERECO__3',
+  id: 'ide_bhgeo_geopackage:ENDERECO__2',
   loading: false,
   search: {
     url: 'http://bhmapogcbase.pbh.gov.br:80/bhmapogcbase/wfs',
@@ -186,9 +186,7 @@ const fetchLogradourosTypeList = action$ =>
   })
 
 const fetchedAddress = action$ =>
-  action$.ofType('FETCH_ADDRESS').switchMap(action => {
-
-    
+  action$.ofType('FETCH_ADDRESS').switchMap(action => {    
     
     if (action.tipo === 1) {
       return Rx.Observable.fromPromise(
@@ -224,9 +222,8 @@ const fetchedAddress = action$ =>
                 crs: "EPSG:31983",
                 rotation: 0
               }, mapSize, null, "EPSG:31983"),
-              clearLayers(),
-              addLayer(layerBase),
-              addLayer(layerOrto),
+              removeNode('ide_bhgeo_geopackage:BAIRRO__2','layers'),
+              removeNode('ide_bhgeo_geopackage:ENDERECO__2','layers'),
               addLayer(layerLog),
               updateNode("ide_bhgeo_geopackage:TRECHO_LOGRADOURO__2", "layers", {opacity:0}))
           }
@@ -269,7 +266,6 @@ const fetchedAddress = action$ =>
           })
 
           if (test == 0) {
-
             return Rx.Observable.of(showNearbyAddresses(result.data))
           }
 
@@ -302,11 +298,10 @@ const fetchedAddress = action$ =>
               rotation: 0
             }, mapSize, null, "EPSG:31983"),
             showNearbyAddresses(),
-            clearLayers(),
-            addLayer(layerBase),
-            addLayer(layerOrto),
+            removeNode('ide_bhgeo_geopackage:BAIRRO__2','layers'),
+            removeNode('ide_bhgeo_geopackage:TRECHO_LOGRADOURO__2','layers'),
             addLayer(layerEnd),
-            updateNode("ide_bhgeo_geopackage:ENDERECO__3", "layers", {opacity:0}))
+            updateNode("ide_bhgeo_geopackage:ENDERECO__2", "layers", {opacity:0}))
         }else{
           return Rx.Observable.of(show({
             title: "Atenção",
