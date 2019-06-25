@@ -13,13 +13,163 @@ import {show} from '../actions/notifications'
 const mapUtils = require('../utils/MapUtils');
 const toBbox = require('turf-bbox');
 const CoordinatesUtils = require('../utils/CoordinatesUtils');
-import { layerLoading, layerLoad ,clearLayers,addLayer,updateNode} from '../actions/layers'
+import { layerLoading, layerLoad ,clearLayers,addLayer,updateNode,removeNode} from '../actions/layers'
 import { showNearbyAddresses } from '../actions/bhmapsearch'
 
-var MapUtils = require('../utils/MapUtils');
 const {
   changeMapView
 } = require('../actions/map');
+
+var layerBase = {
+  id: 'ide_bhgeo:MAPA_BASE__0',
+  format: 'image/jpeg',
+  group: 'background',
+  source: 'bhmap',
+  name: 'ide_bhgeo:MAPA_BASE',
+  opacity: 1,
+  title: 'Mapa Base BH Map',
+  type: 'wms',
+  url: [
+    'http://bhmapogcbase.pbh.gov.br/bhmapogcbase/wms'
+  ],
+  visibility: true,
+  singleTile: false,
+  dimensions: [],
+  hideLoading: false,
+  handleClickOnLayer: false,
+  useForElevation: false,
+  hidden: false,
+  loading: false,
+  loadingError: false
+}
+var layerOrto = {
+  id: 'ide_bhgeo:ORTOFOTO_2015__1',
+  format: 'image/jpeg',
+  group: 'background',
+  source: 'ortofoto',
+  name: 'ide_bhgeo:ORTOFOTO_2015',
+  opacity: 1,
+  title: 'Ortofoto BH 2015',
+  type: 'wms',
+  url: [
+    'http://bhmapogcbase.pbh.gov.br/bhmapogcbase/wms'
+  ],
+  visibility: false,
+  singleTile: false,
+  dimensions: [],
+  hideLoading: false,
+  handleClickOnLayer: false,
+  useForElevation: false,
+  hidden: false
+}
+
+var layerLog ={
+  type: 'wms',
+  url: 'http://bhmapogcbase.pbh.gov.br/bhmapogcbase/wms',
+  visibility: true,
+  dimensions: [],
+  name: 'ide_bhgeo_geopackage:TRECHO_LOGRADOURO',
+  title: 'TRECHO_LOGRADOURO',
+  description: 'TRECHO_LOGRADOURO',
+  bbox: {
+    crs: 'EPSG:4326',
+    bounds: {
+      minx: '-44.06443224752186',
+      miny: '-20.054426718192648',
+      maxx: '-43.85659489205602',
+      maxy: '-19.776289071564925'
+    }
+  },
+  links: [],
+  params: {},
+  allowedSRS: {
+    'EPSG:3785': true,
+    'EPSG:3857': true,
+    'EPSG:4269': true,
+    'EPSG:4326': true,
+    'EPSG:31983': true,
+    'EPSG:102113': true,
+    'EPSG:900913': true
+  },
+  catalogURL: null,
+  id: 'ide_bhgeo_geopackage:TRECHO_LOGRADOURO__2'
+}
+
+var layerBairro = {
+  type: 'wms',
+  url: 'http://bhmapogcbase.pbh.gov.br/bhmapogcbase/wms',
+  visibility: true,
+  dimensions: [],
+  name: 'ide_bhgeo_geopackage:BAIRRO',
+  title: 'BAIRRO',
+  description: 'BAIRRO',
+  bbox: {
+    crs: 'EPSG:4326',
+    bounds: {
+      minx: '-44.06443743875966',
+      miny: '-20.059779436586837',
+      maxx: '-43.85576115758091',
+      maxy: '-19.7761767390773'
+    }
+  },
+  links: [],
+  params: {},
+  allowedSRS: {
+    'EPSG:3785': true,
+    'EPSG:3857': true,
+    'EPSG:4269': true,
+    'EPSG:4326': true,
+    'EPSG:31983': true,
+    'EPSG:102113': true,
+    'EPSG:900913': true
+  },
+  catalogURL: null,
+  id: 'ide_bhgeo_geopackage:BAIRRO__2',
+  loading: false,
+  search: {
+    url: 'http://bhmapogcbase.pbh.gov.br:80/bhmapogcbase/wfs',
+    type: 'wfs'
+  },
+  loadingError: false
+}
+
+var layerEnd = {
+  type: 'wms',
+  url: 'http://bhmapogcbase.pbh.gov.br/bhmapogcbase/wms',
+  visibility: true,
+  dimensions: [],
+  name: 'ide_bhgeo_geopackage:ENDERECO',
+  title: 'ENDERECO',
+  description: 'ENDERECO',
+  bbox: {
+    crs: 'EPSG:4326',
+    bounds: {
+      minx: '-44.06431705510664',
+      miny: '-20.028938784088783',
+      maxx: '-43.861071836821964',
+      maxy: '-19.776633719675576'
+    }
+  },
+  links: [],
+  params: {},
+  allowedSRS: {
+    'EPSG:3785': true,
+    'EPSG:3857': true,
+    'EPSG:4269': true,
+    'EPSG:4326': true,
+    'EPSG:31983': true,
+    'EPSG:102113': true,
+    'EPSG:900913': true
+  },
+  catalogURL: null,
+  id: 'ide_bhgeo_geopackage:ENDERECO__3',
+  loading: false,
+  search: {
+    url: 'http://bhmapogcbase.pbh.gov.br:80/bhmapogcbase/wfs',
+    type: 'wfs'
+  },
+  loadingError: false
+}
 
 import { addMarker } from '../actions/search'
 
@@ -37,39 +187,8 @@ const fetchLogradourosTypeList = action$ =>
 
 const fetchedAddress = action$ =>
   action$.ofType('FETCH_ADDRESS').switchMap(action => {
-    var layer ={
-      type: 'wms',
-      url: 'http://bhmapogcbase.pbh.gov.br/bhmapogcbase/wms',
-      visibility: true,
-      dimensions: [],
-      name: 'ide_bhgeo_geopackage:TRECHO_LOGRADOURO',
-      title: 'TRECHO_LOGRADOURO',
-      description: 'TRECHO_LOGRADOURO',
-      bbox: {
-        crs: 'EPSG:4326',
-        bounds: {
-          minx: '-44.06443224752186',
-          miny: '-20.054426718192648',
-          maxx: '-43.85659489205602',
-          maxy: '-19.776289071564925'
-        }
-      },
-      links: [],
-      params: {},
-      allowedSRS: {
-        'EPSG:3785': true,
-        'EPSG:3857': true,
-        'EPSG:4269': true,
-        'EPSG:4326': true,
-        'EPSG:31983': true,
-        'EPSG:102113': true,
-        'EPSG:900913': true
-      },
-      catalogURL: null,
-      id: 'ide_bhgeo_geopackage:TRECHO_LOGRADOURO__2'
-    }
-    clearLayers()
-    console.log('aqui')
+
+    
     
     if (action.tipo === 1) {
       return Rx.Observable.fromPromise(
@@ -105,7 +224,10 @@ const fetchedAddress = action$ =>
                 crs: "EPSG:31983",
                 rotation: 0
               }, mapSize, null, "EPSG:31983"),
-              addLayer(layer),
+              clearLayers(),
+              addLayer(layerBase),
+              addLayer(layerOrto),
+              addLayer(layerLog),
               updateNode("ide_bhgeo_geopackage:TRECHO_LOGRADOURO__2", "layers", {opacity:0}))
           }
           return Rx.Observable.of(show({
@@ -179,7 +301,12 @@ const fetchedAddress = action$ =>
               crs: "EPSG:31983",
               rotation: 0
             }, mapSize, null, "EPSG:31983"),
-            showNearbyAddresses())
+            showNearbyAddresses(),
+            clearLayers(),
+            addLayer(layerBase),
+            addLayer(layerOrto),
+            addLayer(layerEnd),
+            updateNode("ide_bhgeo_geopackage:ENDERECO__3", "layers", {opacity:0}))
         }else{
           return Rx.Observable.of(show({
             title: "Atenção",
@@ -293,7 +420,7 @@ const fetchedBairro = action$ =>
                       },
                       crs: "EPSG:31983",
                       rotation: 0
-                    }, mapSize, null, "EPSG:31983"))
+                    }, mapSize, null, "EPSG:31983"),)
         }      
       )
       }
