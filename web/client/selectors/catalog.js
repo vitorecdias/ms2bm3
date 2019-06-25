@@ -1,0 +1,24 @@
+const {get} = require('lodash');
+
+module.exports = {
+    groupSelector: (state) => get(state, "controls.metadataexplorer.group"),
+    savingSelector: (state) => get(state, "catalog.saving"),
+    resultSelector: (state) => get(state, "catalog.result"),
+    serviceListOpenSelector: (state) => get(state, "catalog.openCatalogServiceList"),
+    newServiceSelector: (state) => get(state, "catalog.newService"),
+    servicesSelector: (state) => get(state, "catalog.services"),
+    newServiceTypeSelector: (state) => get(state, "catalog.newService.type", "csw"),
+    selectedCatalogSelector: (state) => get(state, `catalog.services["${get(state, 'catalog.selectedService')}"]`),
+    selectedServiceTypeSelector: (state) => get(state, `catalog.services["${get(state, 'catalog.selectedService')}"].type`, "csw"),
+    searchOptionsSelector: (state) => get(state, "catalog.searchOptions"),
+    formatsSelector: (state) => get(state, "catalog.supportedFormats") || [{name: "csw", label: "CSW"}, {name: "wms", label: "WMS"}, {name: "wmts", label: "WMTS"}],
+    loadingErrorSelector: (state) => get(state, "catalog.loadingError"),
+    selectedServiceSelector: (state) => get(state, "catalog.selectedService"),
+    modeSelector: (state) => get(state, "catalog.mode", "view"),
+    layerErrorSelector: (state) => get(state, "catalog.layerError"),
+    searchTextSelector: (state) => get(state, "catalog.searchOptions.text", ""),
+    activeSelector: (state) => get(state, "controls.toolbar.active") === "metadataexplorer" || get(state, "controls.metadataexplorer.enabled"),
+    authkeyParamNameSelector: (state) => {
+        return (get(state, "localConfig.authenticationRules") || []).filter(a => a.method === "authkey").map(r => r.authkeyParamName) || [];
+    }
+};

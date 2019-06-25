@@ -1,0 +1,39 @@
+{
+	"map": {
+		"projection": "EPSG:31983",
+		"units": "m",
+		"center": {"x": 614081.123544728 , "y": 7799109.189933 , "crs": "EPSG:31983"},
+    "zoom":10,
+		"maxExtent": [568905.037951491, 7768267.71982412, 659257.209137965, 7837947.83111652],
+		"layers": [
+      {
+        "format": "image/jpeg",
+        "group": "background",
+        "name": "ide_bhgeo:MAPA_BASE",
+        "opacity": 1,
+        "title": "Mapa Base BH Map",
+        "type": "wms",
+        "url": [
+          "http://bhmapogcbase.pbh.gov.br/bhmapogcbase/wms"
+        ],
+        "source": "bhmap",
+        "visibility": true,
+        "singleTile": false
+      },
+      {
+        "format": "image/jpeg",
+        "group": "background",
+        "name": "ide_bhgeo:ORTOFOTO_2015",
+        "opacity": 1,
+        "title": "Ortofoto BH 2015",
+        "type": "wms",
+        "url": [
+          "http://bhmapogcbase.pbh.gov.br/bhmapogcbase/wms"
+        ],
+        "source": "ortofoto",
+        "visibility": false,
+        "singleTile": false
+      }
+		]
+	}
+}
