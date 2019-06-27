@@ -104,7 +104,7 @@
             "backgroundLayerNotSupported": "O fundo escolhido anteriormente não é suportado por este tipo de mapa. O primeiro disponível será usado.",
             "noBackgroundLayerSupported": "Não existem camadas base suportados para este tipo de mapa.",
             "updateOldMap": "Este é um mapa ativo, logo nem todas as funcionalidades poderão ser activadas. Clique no botão para actualizar o mapa ou ignore esta notificação se não pretender actualizar.",
-            "warningSaveUpdatedMap": "Alguns camadas não foram actualizados correctamente",
+            "warningSaveUpdatedMap": "Alguns camadas não foram actualizados corretamente",
             "saveUpdatedMap": "Todos os camadas foram atualizados com sucesso"
         },
         "dock": {
@@ -249,21 +249,21 @@
           "removeFromFeaturedMaps": "Remover de mapas favoritos",
           "feedback": {
               "noDetailsAvailable": "Detalhes não disponíveis",
-              "successSavedMap": "O mapa foi criado correctamente",
+              "successSavedMap": "O mapa salvo com sucesso",
               "errorDeletingMap": "Erro ao apagar este mapa",
               "errorDeletingThumbnailOfMap": "Erro ao apagar o thumbnail para este mapa",
               "errorDeletingDetailsOfMap": "Erro ao apagar os detalhes para este mapa",
-              "allResDeleted": "Todos os recursos associados a este mapa foram apagados correctamente",
+              "allResDeleted": "Todos os recursos associados a este mapa foram apagados corretamente",
               "errorFetchingDetailsOfMap": "Erro ao pedir os detalhes para este mapa",
               "details": {
-                  "deletedSuccesfully": "Os detalhes foram removidos correctamente",
-                  "savedSuccesfully": "Os detalhes foram gravados correctamente",
-                  "updatedSuccesfully": "Os detalhes foram actualizados correctamente"
+                  "deletedSuccesfully": "Os detalhes foram removidos corretamente",
+                  "savedSuccesfully": "Os detalhes foram gravados corretamente",
+                  "updatedSuccesfully": "Os detalhes foram actualizados corretamente"
               },
               "thumbnail": {
-                  "deletedSuccesfully": "A thumbnail foi removida correctamente",
-                  "savedSuccesfully": "A thumbnail foi gravada correctamente",
-                  "updatedSuccesfully": "A thumbnail foi actualizada correctamente"
+                  "deletedSuccesfully": "A thumbnail foi removida corretamente",
+                  "savedSuccesfully": "A thumbnail foi gravada corretamente",
+                  "updatedSuccesfully": "A thumbnail foi actualizada corretamente"
               },
               "errorWhenSaving": "Ocorreu um erro durante o processo de gravação",
               "errorWhenUpdating": "Ocorreu um erro durante o processo de actualização",
@@ -318,7 +318,7 @@
             "errorSize": "Tamanho máximo permitido: 500kb",
             "error": "A imagem fornecida é inválida",
             "savedMapTitle": "Mapa Gravado",
-            "savedMapMessage": "Mapa foi salvo correctamente",
+            "savedMapMessage": "Mapa foi salvo corretamente",
             "thumbnailError": {
                 "error403": "Você não está autorizado a actualizar a miniatura",
                 "error404": "Um erro ocorreu ao criar a miniatura",
@@ -394,12 +394,12 @@
             "statusIconClose": "Abrir grupo",
             "grabLayerIcon": "Arrastar e organizar camada",
             "grabGroupIcon": "Arrastar e organizar grupo",
-            "toggleLayerVisibilityWarning": "Ajuste visibilidade da camada, Aviso: camada não carregou correctamente",
+            "toggleLayerVisibilityWarning": "Ajuste visibilidade da camada, Aviso: camada não carregou corretamente",
             "createWidget": "Criar um widget para o camada seleccionado",
             "editLayerProperties": "Editar propriedades da camada",
             "browseData": "Abrir tabela de atributos",
             "removeLayer": "Remover camada",
-            "loadingerror": "O camada não foi carregado correctamente",
+            "loadingerror": "O camada não foi carregado corretamente",
             "measure": "Medição",
             "backgroundSwitcher": "Fundos",
             "layers": "Temas",
@@ -948,6 +948,22 @@
             "add": "Add",
             "cancel": "Cancel",
             "success": " correctly imported"
+        },
+        "mapImport": {
+            "title": "Importar",
+            "dropZone": {
+                "heading": "<p><h4>Drop your configuration or vector files here</h4><small>or</small></p>",
+                "selectFiles": "Select Files...",
+                "infoSupported": "<p><small>Supported configuration files: MapStore2 legacy format<br />Supported vector layer files: shapefiles (must be contained in zip archives), KML/KMZ, GeoJSON or GPX</small></p>",
+                "note": "<p><small><i><strong>note</strong>: current map will be overridden in case of configuration files</i></small></p>"
+            },
+            "errors": {
+                "fileNotSupported": "File not supported",
+                "unknownError": "there was an unknown error during import"
+            }
+        },
+        "mapExport": {
+            "title": "Exportar"
         },
         "catalog": {
             "title": "Catálogo de Camadas",

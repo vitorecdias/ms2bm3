@@ -23,7 +23,6 @@ class AddressForm extends React.Component {
 
         this.handleSubmit = this.handleSubmit.bind(this)
         this.handleChangeLogField = this.handleChangeLogField.bind(this)
-        this.onSelectSuggestion = this.onSelectSuggestion.bind(this)
         this.onSelectType = this.onSelectType.bind(this)
         this.onChangeNumber = this.onChangeNumber.bind(this)
         this.submitSuggAddress =this.submitSuggAddress.bind(this)
@@ -59,13 +58,6 @@ class AddressForm extends React.Component {
     }else{
         this.setState({logSuggestionsList: []}) 
     }
-  }
-
-  onSelectSuggestion(event){
-      console.log(event)
-      this.setState({
-          valueLogradouro: event.suggestion
-      })
   }
   
   handleSubmit (){        
@@ -185,16 +177,15 @@ class AddressForm extends React.Component {
                             placeholder="logradouro"
                             onInputChange={e=> this.handleChangeLogField(e)}
                             onChange={e=>{
-                                console.log(e)
+                                
                                 e[0] != undefined?this.handleChangeLogField(e[0].label):null
                             }}
                             filterBy={['labelKey']}
-                            selectHintOnEnter={true}
+                            selectHintOnEnter={true}                            
                             onKeyDown={e => {
                                 if(e.keyCode === 13 && e.shiftKey === false && this.state.idLogradouro != 0) {
                                     this.handleSubmit()  
                                 }}}
-                            
                             />  
      
                     </FormGroup>

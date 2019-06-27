@@ -14,7 +14,11 @@ const mapUtils = require('../utils/MapUtils');
 const toBbox = require('turf-bbox');
 const CoordinatesUtils = require('../utils/CoordinatesUtils');
 import { layerLoading, layerLoad ,clearLayers,addLayer,updateNode,removeNode} from '../actions/layers'
+import {changeDrawingStatus} from '../actions/draw'
+import { hideMapinfoMarker,purgeMapInfoResults} from '../actions/mapInfo'
+import { updateMapLayout} from '../actions/maplayout'
 import { showNearbyAddresses } from '../actions/bhmapsearch'
+import { addMarker ,resetSearch} from '../actions/search'
 
 const {
   changeMapView
@@ -171,7 +175,70 @@ var layerEnd = {
   loadingError: false
 }
 
-import { addMarker } from '../actions/search'
+var layerLote = {
+  type: 'wms',
+  url: 'http://bhmapogcbase.pbh.gov.br/bhmapogcbase/wms',
+  visibility: true,
+  dimensions: [],
+  name: 'pbh_sirgas:S2000_LOTE_CTM',
+  title: 'S2000_LOTE_CTM',
+  description: 'S2000_LOTE_CTM',
+  bbox: {
+    crs: 'EPSG:4326',
+    bounds: {
+      minx: '-44.06439597253957',
+      miny: '-20.059779202536443',
+      maxx: '-43.85589847040204',
+      maxy: '-19.775881104013614'
+    }
+  },
+  links: [],
+  params: {},
+  allowedSRS: {
+    'EPSG:3785': true,
+    'EPSG:3857': true,
+    'EPSG:4269': true,
+    'EPSG:4326': true,
+    'EPSG:31983': true,
+    'EPSG:102113': true,
+    'EPSG:900913': true
+  },
+  catalogURL: null,
+  id: 'pbh_sirgas:S2000_LOTE_CTM__2'
+}
+
+var layerFilter = {
+  type: 'wms',
+  url: 'http://bhmapogcbase.pbh.gov.br/bhmapogcbase/wms',
+  visibility: true,
+  dimensions: [],
+  name: 'pbh_sirgas:S2000_LOTE_CTM',
+  title: 'S2000_LOTE_CTM',
+  description: 'S2000_LOTE_CTM',
+  bbox: {
+    crs: 'EPSG:4326',
+    bounds: {
+      minx: '-44.06439597253957',
+      miny: '-20.059779202536443',
+      maxx: '-43.85589847040204',
+      maxy: '-19.775881104013614'
+    }
+  },
+  links: [],
+  params: {},
+  allowedSRS: {
+    'EPSG:3785': true,
+    'EPSG:3857': true,
+    'EPSG:4269': true,
+    'EPSG:4326': true,
+    'EPSG:31983': true,
+    'EPSG:102113': true,
+    'EPSG:900913': true
+  },
+  catalogURL: null,
+  id: 'layerFilter'
+}
+
 
 ////////////////ADDRESS FORM
 const fetchLogradourosTypeList = action$ =>
@@ -194,7 +261,6 @@ const fetchedAddress = action$ =>
       ).concatMap(result => {
         
         layerLoading(0)
-        console.log(result.data)
           if(result.data.features.length > 0){
             var marker = result.data
 
@@ -224,15 +290,22 @@ const fetchedAddress = action$ =>
               }, mapSize, null, "EPSG:31983"),
               removeNode('ide_bhgeo_geopackage:BAIRRO__2','layers'),
               removeNode('ide_bhgeo_geopackage:ENDERECO__2','layers'),
+              removeNode('pbh_sirgas:S2000_LOTE_CTM__2','layers'),
               addLayer(layerLog),
-              updateNode("ide_bhgeo_geopackage:TRECHO_LOGRADOURO__2", "layers", {opacity:0}))
+              updateNode("ide_bhgeo_geopackage:TRECHO_LOGRADOURO__2", "layers", {opacity:0}),
+              hideMapinfoMarker(),
+              purgeMapInfoResults(),
+              changeDrawingStatus('clean', '', "annotations", [], {}, null),
+              updateMapLayout({bottom:30,boundingMapReact:{bottom:30,left:0,right:0},height:'calc(100% - 30px)',left:0,right:0,transform:'none'})
+              )
           }
           return Rx.Observable.of(show({
             title: "Atenção",
             message: "Nenhum resultado encotrado!",
             position:'tl',
             autoDismiss:5
-        },'warning'))
+        },'warning'),
+        resetSearch())
         }
       )
     } else if (action.tipo === 2) {
@@ -248,7 +321,6 @@ const fetchedAddress = action$ =>
             type: "FeatureCollection",
             features: [],
           }
-          console.log(result.data.endereco)
           result.data.endereco.map(e => {
               
             var feature = {
@@ -282,8 +354,6 @@ const fetchedAddress = action$ =>
 
           let newCenter = mapUtils.getCenterForExtent(bbox, "EPSG:4326");
 
-          console.log(newCenter)
-
           layerLoad(0)
           return Rx.Observable.of(
             addMarker(CoordinatesUtils.reprojectGeoJson(marker,"EPSG:31983","EPSG:4326")),
@@ -300,15 +370,21 @@ const fetchedAddress = action$ =>
             showNearbyAddresses(),
             removeNode('ide_bhgeo_geopackage:BAIRRO__2','layers'),
             removeNode('ide_bhgeo_geopackage:TRECHO_LOGRADOURO__2','layers'),
+            removeNode('pbh_sirgas:S2000_LOTE_CTM__2','layers'),
             addLayer(layerEnd),
-            updateNode("ide_bhgeo_geopackage:ENDERECO__2", "layers", {opacity:0}))
+            updateNode("ide_bhgeo_geopackage:ENDERECO__2", "layers", {opacity:0}),
+            hideMapinfoMarker(),
+            purgeMapInfoResults(),
+            changeDrawingStatus('clean', '', "annotations", [], {}, null),
+            updateMapLayout({bottom:30,boundingMapReact:{bottom:30,left:0,right:0},height:'calc(100% - 30px)',left:0,right:0,transform:'none'}))
         }else{
           return Rx.Observable.of(show({
             title: "Atenção",
             message: "Nenhum resultado encotrado!",
             position:'tl',
             autoDismiss:5
-        },'warning'))
+        },'warning'),
+        resetSearch())
         }
       }
       )
@@ -336,7 +412,6 @@ const fetchedBairro = action$ =>
         axios.get("http://bhmap.pbh.gov.br/v2/api/wfs?version=2.0.0&request=GetFeature&typeName=ide_bhgeo_geopackage%3ABAIRRO&outputFormat=application%2Fjson&CQL_FILTER=ID%3D"+action.payload)
       ).concatMap(result => {
         layerLoading(0)
-        console.log(result.data)
         var marker = result.data
 
         let mapSize = {
@@ -362,7 +437,17 @@ const fetchedBairro = action$ =>
             },
             crs: "EPSG:31983",
             rotation: 0
-          }, mapSize, null, "EPSG:31983"))
+          }, mapSize, null, "EPSG:31983"),
+          showNearbyAddresses(),
+          removeNode('ide_bhgeo_geopackage:ENDERECO__2','layers'),
+          removeNode('ide_bhgeo_geopackage:TRECHO_LOGRADOURO__2','layers'),
+          removeNode('pbh_sirgas:S2000_LOTE_CTM__2','layers'),
+          addLayer(layerBairro),
+          updateNode("ide_bhgeo_geopackage:BAIRRO__2", "layers", {opacity:0}),
+          hideMapinfoMarker(),
+          purgeMapInfoResults(),
+          changeDrawingStatus('clean', '', "annotations", [], {}, null),
+          updateMapLayout({bottom:30,boundingMapReact:{bottom:30,left:0,right:0},height:'calc(100% - 30px)',left:0,right:0,transform:'none'}))
       }
       )
   }
@@ -383,13 +468,13 @@ const fetchedBairro = action$ =>
                   message: "Nenhum resultado encotrado!",
                   position:'tl',
                   autoDismiss:5
-              },'warning'))    
+              },'warning'),
+              resetSearch())    
           }
         return Rx.Observable.fromPromise(
           axios.get("http://bhmap.pbh.gov.br/v2/BHMapProxy.jsp?server=http%3A%2F%2Fbhmapogcbase.pbh.gov.br%2Fbhmapogcbase%2Fwfs%3Fversion%3D2.0.0%26request%3DGetFeature%26typeName%3Dide_bhgeo_geopackage%253ATRECHO_LOGRADOURO%26maxFeatures%3D50%26outputFormat%3Dapplication%252Fjson%26CQL_FILTER%3DID_LOGRADOURO%2520IN%2520("+result.data.endereco[0].idlogradouro+")")
         ).concatMap(result1 => {
                   layerLoading(0)
-                  console.log(result1.data)
                   var marker = result1.data
 
                   let mapSize = {
@@ -415,7 +500,16 @@ const fetchedBairro = action$ =>
                       },
                       crs: "EPSG:31983",
                       rotation: 0
-                    }, mapSize, null, "EPSG:31983"),)
+                    }, mapSize, null, "EPSG:31983"),
+                    removeNode('ide_bhgeo_geopackage:BAIRRO__2','layers'),
+                    removeNode('ide_bhgeo_geopackage:ENDERECO__2','layers'),
+                    removeNode('pbh_sirgas:S2000_LOTE_CTM__2','layers'),
+                    addLayer(layerLog),
+                    updateNode("pbh_sirgas:S2000_LOTE_CTM__2", "layers", {opacity:0}),
+                    hideMapinfoMarker(),
+                    purgeMapInfoResults(),
+                    changeDrawingStatus('clean', '', "annotations", [], {}, null),
+                    updateMapLayout({bottom:30,boundingMapReact:{bottom:30,left:0,right:0},height:'calc(100% - 30px)',left:0,right:0,transform:'none'}))
         }      
       )
       }
@@ -427,19 +521,18 @@ const fetchedBairro = action$ =>
 
   const fetchedIPTU = action$ =>
   action$.ofType('FETCH_IPTU').switchMap(action => {
-      console.log(action.payload)
       return Rx.Observable.fromPromise(
         axios.get("http://bhmap.pbh.gov.br/v2/api/wfs?version=2.0.0&request=GetFeature&typeName=pbh_sirgas%3AS2000_LOTE_CTM&outputFormat=application%2Fjson&CQL_FILTER=INDICE_CADASTRAL%3D%27"+action.payload+"%27")
       ).concatMap(result => {        
         layerLoading(0)
-        console.log(result.data)
         if(result.data.features.length == 0){
             return Rx.Observable.of(show({
                 title: "Atenção",
                 message: "Nenhum resultado encotrado!",
                 position:'tl',
                 autoDismiss:5
-            },'error'))    
+            },'warning'),
+            resetSearch())    
         }
         var marker = result.data
 
@@ -466,7 +559,16 @@ const fetchedBairro = action$ =>
             },
             crs: "EPSG:31983",
             rotation: 0
-          }, mapSize, null, "EPSG:31983"))
+          }, mapSize, null, "EPSG:31983"),
+          removeNode('ide_bhgeo_geopackage:BAIRRO__2','layers'),
+          removeNode('ide_bhgeo_geopackage:ENDERECO__2','layers'),
+          removeNode('ide_bhgeo_geopackage:TRECHO_LOGRADOURO__2','layers'),
+          addLayer(layerLote),
+          updateNode("pbh_sirgas:S2000_LOTE_CTM__2", "layers", {opacity:0}),
+          hideMapinfoMarker(),
+          purgeMapInfoResults(),
+          changeDrawingStatus('clean', '', "annotations", [], {}, null),
+          updateMapLayout({bottom:30,boundingMapReact:{bottom:30,left:0,right:0},height:'calc(100% - 30px)',left:0,right:0,transform:'none'}))
               
       
       }
@@ -477,12 +579,10 @@ const fetchedBairro = action$ =>
 
   const fetchedLoteCP = action$ =>
   action$.ofType('FETCH_LOTE_CP').switchMap(action => {
-      console.log(action.payload)
       return Rx.Observable.fromPromise(
         axios.get("http://bhmap.pbh.gov.br/v2/api/wfs?version=2.0.0&request=GetFeature&typeName=ide_bhgeo%3ALOTE_APROVADO&outputFormat=application%2Fjson&CQL_FILTER=ZONA_FISCAL%3D%27"+action.payload.valueZonaFiscal+"%27%20AND%20QUARTEIRAO%3D%27"+action.payload.valueQuadra+"%27%20AND%20LOTE%3D%27"+action.payload.valueLote+"%27")
       ).concatMap(result => {        
         layerLoading(0)
-        console.log(result.data)
         if(result.data.features.length > 0){
             var marker = result.data
 
@@ -509,14 +609,24 @@ const fetchedBairro = action$ =>
                 },
                 crs: "EPSG:31983",
                 rotation: 0
-              }, mapSize, null, "EPSG:31983"))
+              }, mapSize, null, "EPSG:31983"),
+              removeNode('ide_bhgeo_geopackage:BAIRRO__2','layers'),
+              removeNode('ide_bhgeo_geopackage:ENDERECO__2','layers'),
+              removeNode('ide_bhgeo_geopackage:TRECHO_LOGRADOURO__2','layers'),
+              addLayer(layerLote),
+              updateNode("ide_bhgeo_geopackage:LOTE_CTM__2", "layers", {opacity:0}),
+              hideMapinfoMarker(),
+              purgeMapInfoResults(),
+              changeDrawingStatus('clean', '', "annotations", [], {}, null),
+              updateMapLayout({bottom:30,boundingMapReact:{bottom:30,left:0,right:0},height:'calc(100% - 30px)',left:0,right:0,transform:'none'}))
         }else{
           return Rx.Observable.of(show({
               title: "Atenção",
               message: "Nenhum resultado encotrado!",
               position:'tl',
               autoDismiss:5
-          },'error'))  
+          },'warning'),
+          resetSearch())  
         }
       
       }
@@ -550,7 +660,6 @@ const fetchedAtrrSuggList = action$ =>
               if( resp.data.features){
                   var list =[]
                   resp.data.features.map(x => {
-                  //console.log(x.properties[action.atrrValue])
                   if(list.indexOf(x.properties[action.atrrValue]) === -1 && x.properties[action.atrrValue] != 'undefined' && x.properties[action.atrrValue] != null && x.properties[action.atrrValue] != 'null') {
                     list.push(x.properties[action.atrrValue]+"");
                   }
@@ -572,8 +681,6 @@ const fetchedFilter = action$ =>
         return Rx.Observable.fromPromise(
           axios.get(action.busca)
         ).concatMap(result => {        
-          
-          console.log(result.data)
           let mapSize = {
             width: 1920,
             height: 909
@@ -587,6 +694,10 @@ const fetchedFilter = action$ =>
               let newZoom = mapUtils.getZoomForExtent(CoordinatesUtils.reprojectBbox(bbox, "EPSG:4326", "EPSG:31983"), mapSize, 0, 21, null);
       
               let newCenter = mapUtils.getCenterForExtent(bbox, "EPSG:31983");
+
+              layerFilter.name = 'ide_bhgeo_geopackage:'+action.nomeCamada
+              layerFilter.title = action.nomeCamada
+              layerFilter.description = action.nomeCamada
       
               layerLoad(0)
               return Rx.Observable.of(
@@ -600,7 +711,18 @@ const fetchedFilter = action$ =>
                   },
                   crs: "EPSG:31983",
                   rotation: 0
-                }, mapSize, null, "EPSG:31983"))                    
+                }, mapSize, null, "EPSG:31983"),
+                removeNode('layerFilter','layers'),
+                removeNode('ide_bhgeo_geopackage:BAIRRO__2','layers'),
+                removeNode('ide_bhgeo_geopackage:ENDERECO__2','layers'),
+                removeNode('ide_bhgeo_geopackage:TRECHO_LOGRADOURO__2','layers'),
+                removeNode('ide_bhgeo_geopackage:LOTE_CTM__2','layers'),
+                addLayer(layerFilter),
+                updateNode("layerFilter", "layers", {opacity:0}),
+                hideMapinfoMarker(),
+                purgeMapInfoResults(),
+                changeDrawingStatus('clean', '', "annotations", [], {}, null),
+                updateMapLayout({bottom:30,boundingMapReact:{bottom:30,left:0,right:0},height:'calc(100% - 30px)',left:0,right:0,transform:'none'}))                    
             }            
           
           return Rx.Observable.of(show({
@@ -608,7 +730,8 @@ const fetchedFilter = action$ =>
                 message: "Nenhum resultado encotrado!",
                 position:'tl',
                 autoDismiss:5
-            },'warning'))     
+            },'warning'),
+            resetSearch())     
       }
       )
     }

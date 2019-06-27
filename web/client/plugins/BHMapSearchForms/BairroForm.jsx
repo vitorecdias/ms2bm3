@@ -64,7 +64,6 @@ class BairroForm extends React.Component {
     }
 
     onChange(e){
-      console.log(e)
       this.setState({valueBairro: e})
     }  
 

@@ -2,13 +2,15 @@
     "proxyUrl": {
         "url": "proxy/?url=",
         "useCORS": [
-          "http://demo.geo-solutions.it/geoserver", 
-          "https://demo.geo-solutions.it:443/geoserver", 
-          "https://demo.geo-solutions.it/geoserver", 
-          "https://nominatim.openstreetmap.org", 
+          "http://demo.geo-solutions.it/geoserver",
+          "https://demo.geo-solutions.it:443/geoserver",
+          "https://demo.geo-solutions.it/geoserver",
+          "https://nominatim.openstreetmap.org",
           "http://cloudsdi.geo-solutions.it",
+          "https://gs-stable.geo-solutions.it/geoserver",
+          "https://gs-stable.geo-solutions.it:443/geoserver",
           "http://geocoder.pbh.gov.br/",
-          "http://bhmapogcbase.pbh.gov.br/bhmapogcbase/ide_bhgeo/*"
+          "http://bhmapogcbase.pbh.gov.br/*"
           ]
     },
     "geoStoreUrl": "rest/geostore/",
@@ -45,9 +47,7 @@
         "code": "EPSG:31983",
         "def": "+proj=utm +zone=23 +south +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs",
         "extent": [167058.56998217307,6289251.342124983,880152.2731789695,10567813.561305761],
-        "worldExtent": [
-          568905.037951491, 7768267.71982412, 659257.209137965, 7837947.83111652
-        ]
+        "worldExtent": [568905.037951491, 7768267.71982412, 659257.209137965, 7837947.83111652]
       }
     ],
     "initialState": {
@@ -306,7 +306,7 @@
                 "editCRS": true,
                 "showLabels": true,
                 "showToggle": true,
-                "filterAllowedCRS": ["EPSG:31983"],
+                "filterAllowedCRS": [],
                 "additionalCRS": {
                   "EPSG:31983":{"label" : "SIRGAS 2000 23s"}
                 }
