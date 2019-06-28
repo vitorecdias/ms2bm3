@@ -101,11 +101,12 @@ export function getAtrrSuggList(camadaName,atrrValue=0){
     }
 }
 
-export function fetchFilter(busca,nomeCamada){
+export function fetchFilter(busca,nomeCamada,workspace){
     return{
         type: 'FETCH_FILTER',
         busca,
-        nomeCamada
+        nomeCamada,
+        workspace
     }
 }
 

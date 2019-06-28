@@ -302,6 +302,7 @@
             }
         },
         "map": {
+            "errorLoadingFont":"Erro ao ler fonte",
             "loading": "Carregando...",
             "loadingSpinner": "Carregando BH Map",
             "loadingerror": "Erro ao carregar",

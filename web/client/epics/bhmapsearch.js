@@ -505,7 +505,7 @@ const fetchedBairro = action$ =>
                     removeNode('ide_bhgeo_geopackage:ENDERECO__2','layers'),
                     removeNode('pbh_sirgas:S2000_LOTE_CTM__2','layers'),
                     addLayer(layerLog),
-                    updateNode("pbh_sirgas:S2000_LOTE_CTM__2", "layers", {opacity:0}),
+                    updateNode("ide_bhgeo_geopackage:TRECHO_LOGRADOURO__2", "layers", {opacity:0}),
                     hideMapinfoMarker(),
                     purgeMapInfoResults(),
                     changeDrawingStatus('clean', '', "annotations", [], {}, null),
@@ -695,7 +695,7 @@ const fetchedFilter = action$ =>
       
               let newCenter = mapUtils.getCenterForExtent(bbox, "EPSG:31983");
 
-              layerFilter.name = 'ide_bhgeo_geopackage:'+action.nomeCamada
+              layerFilter.name = action.workspace+':'+action.nomeCamada
               layerFilter.title = action.nomeCamada
               layerFilter.description = action.nomeCamada
       

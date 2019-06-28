@@ -73,12 +73,14 @@ class FilterForm extends React.Component {
         if(this.state.valueOperador != "BETWEEN" && this.state.valor!=''){
             this.props.fetchFilter(
                 "http://bhmap.pbh.gov.br/v2/api/wfs?version=2.0.0&request=GetFeature&typeName=ide_bhgeo_geopackage%3A"+this.props.camadasList[this.state.valueCamada].servicos.wfs.typename+"&outputFormat=application%2Fjson&CQL_FILTER="+(/^\d+$/.test(this.state.valor)?this.attr.value:"strToLowerCase("+this.attr.value+")")+"%20"+this.state.valueOperador+"%20%27"+(String(this.state.valor).toLowerCase())+"%27",
-                this.props.camadasList[this.state.valueCamada].servicos.wfs.typename
+                this.props.camadasList[this.state.valueCamada].servicos.wfs.typename,
+                this.props.camadasList[this.state.valueCamada].servicos.wfs.workspace
                 )
         }else if(this.state.valor1!='' && this.state.valor2!=''){
             this.props.fetchFilter(
                 "http://bhmap.pbh.gov.br/v2/api/wfs?version=2.0.0&request=GetFeature&typeName=ide_bhgeo_geopackage%3A"+this.props.camadasList[this.state.valueCamada].servicos.wfs.typename+"&outputFormat=application%2Fjson&CQL_FILTER="+(/^\d+$/.test(this.state.valor1) && /^\d+$/.test(this.state.valor2)?this.attr.value:"strToLowerCase("+this.attr.value+")")+"%20BETWEEN%20%27"+String(this.state.valor1).toLowerCase()+"%27%20AND%20%27"+String(this.state.valor2).toLowerCase()+"%27",
-                this.props.camadasList[this.state.valueCamada].servicos.wfs.typename
+                this.props.camadasList[this.state.valueCamada].servicos.wfs.typename,
+                this.props.camadasList[this.state.valueCamada].servicos.wfs.workspace
             )
         }else{
             this.props.show({
