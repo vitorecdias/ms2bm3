@@ -79,6 +79,11 @@ class BHMapSearch extends React.Component{
                            <FilterForm/>
                         </Panel>
                     </Tab>
+                    <Tab key='filtro_form' eventKey={7} title="Rota">
+                        <Panel>
+                           <FilterForm/>
+                        </Panel>
+                    </Tab>
                 </Tabs>
                 </div>                 
                 
